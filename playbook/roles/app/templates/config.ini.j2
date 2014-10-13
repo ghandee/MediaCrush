@@ -1,0 +1,61 @@
+[meta]
+environment = dev
+
+[config]
+protocol = http
+domain = {{ app_domain }}
+incoming_domain = {{ incoming_domain }}
+tor_domain =
+
+# URLs to media files will be prefixed with this. Do not include a trailing forward slash.
+# If you don't use a CDN, you can leave this empty.
+cdn =
+
+# When running in debug mode, this controls the endpoint that it listens on.
+debug-host = {{ app_host }}
+debug-port = {{ app_port }}
+
+# When true, static resources will be recompiled on every request, instead of just
+# at startup
+debug-static-recompile=false
+
+# storage_folder is the location on disk where uploaded files should be saved.
+# If you have problems, you might want to use an absolute path here
+storage_folder = storage
+# This value is currently ignored, and each supported mimetype has its own timing rules.
+max_processing_time = 60
+
+hook_ips =
+hook_branch = master
+hook_repository = MediaCrush/MediaCrush
+restart_command = supervisorctl reload
+
+redis-ip = 127.0.0.1
+redis-port = 6379
+
+project_wonderful_id =
+
+google_analytics_id =
+google_analytics_domain =
+
+dwolla_id = changeme
+flattr_id = changeme
+coinbase_id = changeme
+
+mandrill_api = changeme
+admin_email = changeme@changeme.com
+from_email = admin@mediacru.sh
+
+docs_path = docs
+
+[ratelimit-upload]
+period = 3600
+units_per_period = 250000000
+
+[ratelimit-feedback]
+period = 86400
+units_per_period = 5
+
+[ratelimit-report]
+period = 86400
+units_per_period = 5

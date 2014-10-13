@@ -1,0 +1,8 @@
+[local]
+127.0.0.1
+
+[stg]
+94.76.202.144 ansible_ssh_user=jacek
+
+[prod]
+ubuntu@ec2-54-171-130-167.eu-west-1.compute.amazonaws.com ansible_ssh_user=ubuntu

@@ -1,0 +1,60 @@
+- name: Getting current date
+  command: date +%Y%m%d%H%M
+  register: current_date
+
+- name: Create directories
+  file: path={{ item }} state=directory owner={{ server_user }} group={{ server_user }}
+  sudo: true
+  with_items:
+    - "{{ app_directory }}"
+    - "{{ log_directory }}"
+
+
+- name: Checking out repository
+  git: repo=git@github.com:ghandee/MediaCrush.git dest={{ app_directory }}/repository version={{ tag }} accept_hostkey=true
+  when: new_release == "y"
+
+- name: Creating application directories
+  file: path={{ app_directory }}/{{ item }} state=directory
+  with_items:
+    - env
+    - src
+
+- name: Create new virtualenv
+  pip: virtualenv={{ app_directory }}/env/{{ current_date.stdout }} name=distribute extra_args=-U
+  when: rebuild_env == "y"
+
+- name: Installing requirements
+  pip: virtualenv={{ app_directory }}/env/{{ current_date.stdout }} requirements={{ app_directory }}/repository/requirements.txt
+  when: rebuild_env == "y"
+
+- name: Symlinking new environment
+  file: path={{ app_directory }}/env/current src={{ app_directory }}/env/{{ current_date.stdout }} force=yes state=link
+  when: rebuild_env == "y"
+
+- name: Copying code to new destination
+  command: rsync -av --exclude=.git {{ app_directory }}/repository/ {{ app_directory }}/src/{{ current_date.stdout }}
+  when: new_release == "y"
+
+- name: Symlinking new code
+  file: path={{ app_directory }}/src/current src={{ app_directory }}/src/{{ current_date.stdout }} force=yes state=link
+  when: new_release == "y"
+
+- name: Copying config.ini
+  template: src=config.ini.j2 dest={{ app_directory }}/src/{{ current_date.stdout }}/config.ini
+  when: new_release == "y"
+
+#- name: Starting service
+#  command: "start upstart-mediacrush"
+#  when: app_action == "start"
+#  sudo: true
+#
+#- name: Stopping service
+#  command: "stop upstart-mediacrush"
+#  when: app_action == "stop"
+#  sudo: true
+#
+#- name: Restarting service
+#  command: "restart upstart-mediacrush"
+#  when: app_action == "restart"
+#  sudo: true

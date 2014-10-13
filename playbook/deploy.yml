@@ -1,0 +1,35 @@
+- hosts: "{{ env }}"
+  user: "{{ server_user }}"
+  vars_prompt:
+    - name: new_release
+      prompt: "Pull and symlink new code (y | n) ?"
+      private: no
+      default: y
+      secure: no
+    - name: tag
+      prompt: "Git tag to deploy ?"
+      private: no
+      default: develop
+      secure: no
+    - name: rebuild_env
+      prompt: "Create new virtualenv and install reqs (y | n) ?"
+      private: no
+      default: n
+      secure: no
+    - name: collect_static
+      prompt: "Collect staticfiles (y | n) ?"
+      private: no
+      default: y
+      secure: no
+    - name: migrate
+      prompt: "Migrate database (y | n) ?"
+      private: no
+      default: y
+      secure: no
+    - name: app_action
+      prompt: "How to handle upstart script (start | stop | restart) ?"
+      private: no
+      default: restart
+      secure: no
+  roles:
+    - app
