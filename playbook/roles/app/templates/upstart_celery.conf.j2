@@ -1,0 +1,11 @@
+description "Upstart for celery workers of MediaCrush Application"
+
+start on (filesystem)
+stop on runlevel [016]
+
+respawn
+
+script
+    chdir {{ app_directory }}/src/current
+    exec sudo -u {{ server_user }} {{ app_directory }}/env/current/bin/celery worker -A mediacrush -Q celery,priority
+end script

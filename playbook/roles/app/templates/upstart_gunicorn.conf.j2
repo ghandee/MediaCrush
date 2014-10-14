@@ -1,0 +1,11 @@
+description "Upstart for gunicorn MediaCrush Application"
+
+start on (filesystem)
+stop on runlevel [016]
+
+respawn
+
+script
+    chdir {{ app_directory }}/src/current
+    exec sudo -u {{ server_user }} {{ app_directory }}/env/current/bin/gunicorn -w {{ gunicorn_num_workers }} -b {{ gunicorn_bind }} app:app --log-file {{ log_directory }}gunicorn-mediacrush.log --log-level {{ gunicorn_log_level }}
+end script

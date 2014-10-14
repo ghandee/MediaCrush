@@ -44,17 +44,45 @@
   template: src=config.ini.j2 dest={{ app_directory }}/src/{{ current_date.stdout }}/config.ini
   when: new_release == "y"
 
-#- name: Starting service
-#  command: "start upstart-mediacrush"
-#  when: app_action == "start"
-#  sudo: true
-#
-#- name: Stopping service
-#  command: "stop upstart-mediacrush"
-#  when: app_action == "stop"
-#  sudo: true
-#
-#- name: Restarting service
-#  command: "restart upstart-mediacrush"
-#  when: app_action == "restart"
-#  sudo: true
+
+- name: Copying upstart_gunicorn.conf
+  template: src=upstart_gunicorn.conf.j2 dest=/etc/init/upstart-mediacrush-app.conf mode=0644
+  when: new_release == "y"
+  sudo: true
+
+- name: Copying upstart_celery.conf
+  template: src=upstart_celery.conf.j2 dest=/etc/init/upstart-mediacrush-workers.conf mode=0644
+  when: new_release == "y"
+  sudo: true
+
+
+- name: Starting service
+  command: "start upstart-mediacrush-app"
+  when: app_action == "start"
+  sudo: true
+
+- name: Stopping service
+  command: "stop upstart-mediacrush-app"
+  when: app_action == "stop"
+  sudo: true
+
+- name: Restarting service
+  command: "restart upstart-mediacrush-app"
+  when: app_action == "restart"
+  sudo: true
+
+
+- name: Starting workers
+  command: "start upstart-mediacrush-workers"
+  when: app_action == "start"
+  sudo: true
+
+- name: Stopping workerss
+  command: "stop upstart-mediacrush-workers"
+  when: app_action == "stop"
+  sudo: true
+
+- name: Restarting workers
+  command: "restart upstart-mediacrush-workers"
+  when: app_action == "restart"
+  sudo: true
