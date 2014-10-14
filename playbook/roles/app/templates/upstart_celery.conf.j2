@@ -7,5 +7,5 @@ respawn
 
 script
     chdir {{ app_directory }}/src/current
-    exec sudo -u {{ server_user }} {{ app_directory }}/env/current/bin/celery worker -A mediacrush -Q celery,priority
+    exec sudo -u {{ server_user }} {{ app_directory }}/env/current/bin/celery worker -A mediacrush -Q celery,priority -l info
 end script
