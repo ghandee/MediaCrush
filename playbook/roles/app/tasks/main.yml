@@ -8,6 +8,7 @@
   with_items:
     - "{{ app_directory }}"
     - "{{ log_directory }}"
+    - "{{ storage_directory }}"
 
 
 - name: Checking out repository
