@@ -8,3 +8,4 @@ lib/
 *.rdb
 storage/
 playbook/group_vars/
+venv/

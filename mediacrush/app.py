@@ -15,9 +15,12 @@ from mediacrush.views.media import render_media
 from mediacrush.share import share
 from mediacrush.network import is_tor, get_ip
 from mediacrush.mcmanage.compliments import compliments
+from mediacrush.utils import ReverseProxied
 
 app = Flask(__name__)
 app.jinja_env.cache = None
+app.wsgi_app = ReverseProxied(app.wsgi_app)
+
 bcrypt = Bcrypt(app)
 Markdown(app)
 
